@@ -23,7 +23,7 @@ export default async function PublishedDraftPage(ctx: { params: Promise<{ id: st
     <div className="mx-auto max-w-3xl p-6">
       <div className="mb-4 flex items-center gap-3">
         <Image
-          src={'/ChatGPT%20Image%20Sep%2017,%202025,%2010_42_57%20PM%20-%20Edited.png'}
+          src={'/mnr_logo.png'}
           alt="Mock’n’Roll logo"
           width={40}
           height={40}

@@ -6,7 +6,7 @@ export default function Home() {
       <div className="flex flex-col items-center gap-6 text-center">
         <Image
           src={
-            '/ChatGPT%20Image%20Sep%2017,%202025,%2010_42_57%20PM%20-%20Edited.png'
+            '/mnr_logo.png'
           }
           alt="Mock’n’Roll logo"
           width={420}
