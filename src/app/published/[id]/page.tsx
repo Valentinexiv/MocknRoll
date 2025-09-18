@@ -21,8 +21,17 @@ export default async function PublishedDraftPage(ctx: { params: Promise<{ id: st
   const url = host ? `${proto}://${host}/published/${id}` : `/published/${id}`;
   return (
     <div className="mx-auto max-w-3xl p-6">
-      <div className="mb-4">
-        <a href="/create-draft" className="inline-block px-3 py-1.5 rounded-md border bg-white">Create a Draft</a>
+      <div className="mb-4 flex items-center gap-3">
+        <Image
+          src={'/ChatGPT%20Image%20Sep%2017,%202025,%2010_42_57%20PM%20-%20Edited.png'}
+          alt="Mock’n’Roll logo"
+          width={40}
+          height={40}
+          priority
+        />
+        <div className="ml-auto">
+          <a href="/create-draft" className="inline-block px-5 py-2.5 rounded-md bg-blue-600 text-white hover:bg-blue-700">Create a Draft</a>
+        </div>
       </div>
       <header className="mb-8">
         <h1 className="text-3xl font-extrabold tracking-tight">{draft.title}</h1>
