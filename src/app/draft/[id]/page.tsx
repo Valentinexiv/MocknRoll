@@ -94,6 +94,22 @@ export default function DraftPage() {
     }
   }
 
+  async function clearPick(pickNumber: number) {
+    if (!draft) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/mock-drafts/${draft.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ picks: [{ pickNumber, prospectId: null }] }),
+      });
+      const updated = await res.json();
+      setDraft(updated);
+    } finally {
+      setSaving(false);
+    }
+  }
+
   async function publishDraft() {
     if (!draft) return;
     const res = await fetch(`/api/mock-drafts/${draft.id}/publish`, { method: "POST" });
@@ -132,6 +148,19 @@ export default function DraftPage() {
                 ) : null}
                 <span className="font-medium">{p.team.name}</span>
                 <span className="ml-auto text-xs uppercase opacity-70">{p.team.abbreviation}</span>
+                {p.prospect ? (
+                  <button
+                    type="button"
+                    title="Remove pick"
+                    aria-label="Remove pick"
+                    onClick={() => clearPick(p.pickNumber)}
+                    className="ml-2 p-1 rounded hover:bg-neutral-100 text-neutral-500"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+                      <path fillRule="evenodd" d="M9 3a1 1 0 0 0-1 1v1H5.5a.75.75 0 0 0 0 1.5H6v12.25A2.25 2.25 0 0 0 8.25 21h7.5A2.25 2.25 0 0 0 18 18.75V6.5h.5a.75.75 0 0 0 0-1.5H16V4a1 1 0 0 0-1-1H9Zm6 3.5H9V4.5h6V6.5Zm-5.25 3a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-1.5 0v-7a.75.75 0 0 1 .75-.75Zm4.5 0a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-1.5 0v-7a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                ) : null}
               </div>
               <div className="p-4">
                 {p.prospect ? (
