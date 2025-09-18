@@ -1,4 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Deployment notes (Vercel + Supabase)
+
+1) Environment variables
+
+Add these in Vercel Project → Settings → Environment Variables (Production & Preview):
+
+- DATABASE_URL = your Supabase Postgres connection string (app_user recommended)
+- NEXT_PUBLIC_SUPABASE_URL = https://YOUR-REF.supabase.co (optional if you need it later)
+- NEXT_PUBLIC_SITE_URL = https://your-vercel-domain (optional)
+
+2) Build settings
+
+- Framework: Next.js
+- Build command: next build (already set)
+- Install command: (default). `postinstall` runs `prisma generate` automatically.
+- Output: .next
+
+3) Prisma
+
+- We use Prisma with Postgres (Supabase). No migrations are run at build time; ensure the database schema exists (you already applied SQL for production). If you need to run migrations, use `prisma migrate deploy` locally or a CI step before deployment.
+
+4) Images
+
+- `next.config.ts` whitelists `a.espncdn.com` and `*.supabase.co` for remote images.
+
+5) Security
+
+- Enable RLS and policies in Supabase as documented. Use a least‑privilege DB user in `DATABASE_URL`.
+
+6) Optional: Vercel Env Groups & Secrets
+
+- Use Vercel Secrets for the database password.
+
 
 ## Getting Started
 

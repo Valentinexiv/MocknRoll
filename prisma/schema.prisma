@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Team {
+  id            Int      @id @default(autoincrement())
+  name          String
+  abbreviation  String   @unique
+  city          String
+  logoUrl       String?
+  primaryColor  String?
+  secondaryColor String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  picks         Pick[]
+}
+
+model Prospect {
+  id             Int      @id @default(autoincrement())
+  rank           Int
+  name           String
+  position       String
+  age            Int?
+  projection     String?
+  archetype      String?
+  college        String?
+  collegeLogoUrl String?
+  height         String?
+  weight         Int?
+  mnrGrade       Float?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  picks          Pick[]
+}
+
+model MockDraft {
+  id           String    @id @default(cuid())
+  title        String
+  authorName   String?
+  description  String?
+  isPublished  Boolean   @default(false)
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  picks        Pick[]
+}
+
+model Pick {
+  id           Int        @id @default(autoincrement())
+  mockDraftId  String
+  pickNumber   Int
+  teamId       Int
+  prospectId   Int?
+  commentary   String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  team         Team       @relation(fields: [teamId], references: [id])
+  prospect     Prospect?  @relation(fields: [prospectId], references: [id])
+  mockDraft    MockDraft  @relation(fields: [mockDraftId], references: [id])
+
+  @@unique([mockDraftId, pickNumber])
+  @@index([teamId])
+  @@index([prospectId])
+}
