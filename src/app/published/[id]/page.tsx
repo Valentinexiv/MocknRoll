@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { ShareBar } from "@/components/ShareBar";
 
@@ -75,6 +76,37 @@ export default async function PublishedDraftPage(ctx: { params: Promise<{ id: st
       </article>
     </div>
   );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  try {
+    const draft = await fetchDraft(id);
+    const title = draft?.title ? `${draft.title} – Mock’n’Roll` : 'Mock’n’Roll Draft';
+    const description = draft?.description || 'Published mock draft on Mock’n’Roll.';
+    const url = `/published/${id}`;
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        url,
+        images: [
+          { url: '/mnr_logo.png', width: 800, height: 800, alt: 'Mock’n’Roll' }
+        ],
+        type: 'article'
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        images: ['/mnr_logo.png']
+      }
+    };
+  } catch {
+    return {};
+  }
 }
 
 
