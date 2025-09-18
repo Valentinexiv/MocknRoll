@@ -2,7 +2,7 @@
 
 import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
-import type { Team } from "@/types/team";
+import type { Team } from "./TeamOrderBuilder";
 
 export function SortableTeamItem({ id, team, index }: { id: string; team: Team; index: number }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });

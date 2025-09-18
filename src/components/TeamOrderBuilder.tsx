@@ -17,9 +17,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableTeamItem } from "./SortableTeamItem";
-import type { Team as TeamType } from "@/types/team";
 
-export type Team = TeamType & {
+export type Team = {
   id: number;
   name: string;
   abbreviation: string;
