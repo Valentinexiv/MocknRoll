@@ -70,7 +70,7 @@ async function seedProspectsFromCsv(csvPath: string) {
     .pipe(
       parse({
         bom: true,
-        columns: (headers) => headers.map((h) => h.trim()),
+        columns: (headers: string[]): string[] => headers.map((h: string) => h.trim()),
         skip_empty_lines: true,
         trim: true
       })
