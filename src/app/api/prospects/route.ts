@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import type { Prisma } from '@/generated/prisma';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -8,20 +9,18 @@ export async function GET(req: NextRequest) {
   const position = (searchParams.get('position') || '').trim();
   const sort = (searchParams.get('sort') || 'grade').trim();
 
-  const where = {
-    AND: [
-      q
-        ? {
-            OR: [
-              { name: { contains: q, mode: 'insensitive' } },
-              { position: { contains: q, mode: 'insensitive' } },
-              { college: { contains: q, mode: 'insensitive' } }
-            ]
-          }
-        : {},
-      position ? { position: { equals: position } } : {}
-    ]
-  } as const;
+  const where: Prisma.ProspectWhereInput = {};
+  if (q) {
+    where.OR = [
+      { name: { contains: q, mode: 'insensitive' } },
+      { position: { contains: q, mode: 'insensitive' } },
+      { college: { contains: q, mode: 'insensitive' } }
+    ];
+  }
+  if (position) {
+    const current = Array.isArray(where.AND) ? where.AND : where.AND ? [where.AND] : [];
+    where.AND = [...current, { position: { equals: position } }];
+  }
 
   const prospects = await prisma.prospect.findMany({
     where,
