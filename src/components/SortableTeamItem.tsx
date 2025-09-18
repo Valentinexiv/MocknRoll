@@ -12,7 +12,7 @@ export function SortableTeamItem({ id, team, index }: { id: string; team: Team; 
   } as const;
 
   return (
-    <li ref={setNodeRef} style={style} className="flex items-center gap-3 px-3 py-2 select-none" {...attributes} {...listeners}>
+    <div ref={setNodeRef} style={style} className="flex items-center gap-3 px-3 py-2 select-none" {...attributes} {...listeners}>
       <span className="text-sm w-8 tabular-nums opacity-70">{index + 1}</span>
       {team.logoUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -21,7 +21,7 @@ export function SortableTeamItem({ id, team, index }: { id: string; team: Team; 
       <span className="font-medium">{team.name}</span>
       <span className="ml-auto text-xs uppercase opacity-70">{team.abbreviation}</span>
       <span className="cursor-grab ml-3 opacity-70">⋮⋮</span>
-    </li>
+    </div>
   );
 }
 

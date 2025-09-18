@@ -61,7 +61,7 @@ export default function CreateDraftPage() {
         <textarea className="w-full rounded-md ring-1 ring-black/10 px-3 py-2" rows={4} value={description} onChange={(e)=>setDescription(e.target.value)} placeholder="Brief intro…" />
       </aside>
       <div>
-        <TeamOrderBuilder initialTeams={teams} onSubmit={handleSubmit} submitting={loading} />
+        <TeamOrderBuilder initialTeams={teams} allTeams={teams} onSubmit={handleSubmit} submitting={loading} />
       </div>
     </div>
   );
