@@ -13,8 +13,10 @@ async function fetchDraft(id: string) {
   return res.json();
 }
 
-export default async function PublishedDraftPage(ctx: { params: Promise<{ id: string }> }) {
+export default async function PublishedDraftPage(ctx: { params: Promise<{ id: string }>, searchParams: Promise<{ published?: string }> }) {
   const { id } = await ctx.params;
+  const sp = await ctx.searchParams;
+  const justPublished = sp?.published === '1' || sp?.published === 'true';
   const draft = await fetchDraft(id);
   const h = await headers();
   const host = h.get('x-forwarded-host') || h.get('host');
@@ -34,6 +36,11 @@ export default async function PublishedDraftPage(ctx: { params: Promise<{ id: st
           <a href="/create-draft" className="inline-block px-5 py-2.5 rounded-md bg-blue-600 text-white hover:bg-blue-700">Create a Draft</a>
         </div>
       </div>
+      {justPublished ? (
+        <div className="mb-6 rounded-md bg-green-50 text-green-800 ring-1 ring-green-200 px-4 py-3">
+          Successfully published! This is your live article.
+        </div>
+      ) : null}
       <header className="mb-8">
         <h1 className="text-3xl font-extrabold tracking-tight">{draft.title}</h1>
         <div className="text-sm opacity-70 mt-1">By {draft.authorName || 'Anonymous'}</div>

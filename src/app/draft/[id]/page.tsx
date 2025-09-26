@@ -116,7 +116,7 @@ export default function DraftPage() {
     const updated = await res.json();
     setDraft(updated);
     if (updated?.id) {
-      router.push(`/published/${updated.id}`);
+      router.push(`/published/${updated.id}?published=1`);
     }
   }
 
