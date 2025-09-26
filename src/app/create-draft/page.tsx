@@ -7,6 +7,7 @@ import { DEFAULT_DRAFT_ORDER } from "@/config/defaultDraftOrder";
 
 export default function CreateDraftPage() {
   const [teams, setTeams] = useState<Team[] | null>(null);
+  const [allTeams, setAllTeams] = useState<Team[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState<string>("My Mock Draft");
   const [authorName, setAuthorName] = useState<string>("");
@@ -17,17 +18,19 @@ export default function CreateDraftPage() {
     fetch("/api/teams")
       .then((r) => r.json())
       .then((data: Team[]) => {
-        // sort teams by default draft order template when available
-        const orderIndex: Record<string, number> = Object.create(null);
-        DEFAULT_DRAFT_ORDER.forEach((abbr, idx) => {
-          orderIndex[abbr] = idx;
-        });
-        const sorted = [...data].sort((a, b) => {
-          const ai = orderIndex[a.abbreviation] ?? Number.MAX_SAFE_INTEGER;
-          const bi = orderIndex[b.abbreviation] ?? Number.MAX_SAFE_INTEGER;
-          return ai - bi;
-        });
-        setTeams(sorted);
+        // Build initial order preserving duplicates from DEFAULT_DRAFT_ORDER
+        const byAbbr = new Map<string, Team>();
+        for (const t of data) byAbbr.set(t.abbreviation, t);
+
+        // Initial order: exactly the template (duplicates preserved), no extras
+        const initial: Team[] = [];
+        for (const abbr of DEFAULT_DRAFT_ORDER) {
+          const t = byAbbr.get(abbr);
+          if (t) initial.push(t);
+        }
+
+        setTeams(initial);
+        setAllTeams(data);
       });
   }, []);
 
@@ -61,7 +64,7 @@ export default function CreateDraftPage() {
         <textarea className="w-full rounded-md ring-1 ring-black/10 px-3 py-2" rows={4} value={description} onChange={(e)=>setDescription(e.target.value)} placeholder="Brief intro…" />
       </aside>
       <div>
-        <TeamOrderBuilder initialTeams={teams} allTeams={teams} onSubmit={handleSubmit} submitting={loading} />
+        <TeamOrderBuilder initialTeams={teams} allTeams={allTeams ?? teams} onSubmit={handleSubmit} submitting={loading} />
       </div>
     </div>
   );
